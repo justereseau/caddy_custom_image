@@ -1,8 +1,15 @@
-FROM caddy:2.10.2-builder AS builder
+# renovate: datasource=docker depName=caddy
+ARG CADDY_VERSION=2.10.2
 
-RUN xcaddy build latest --with github.com/caddy-dns/cloudflare@latest
+FROM caddy:${CADDY_VERSION}-builder AS builder
 
-FROM caddy:2.10.2
+# Re-declare inside the stage so the global ARG is available to RUN.
+ARG CADDY_VERSION
+
+# Build the same Caddy version as the base image (follow the source version).
+RUN xcaddy build "v${CADDY_VERSION}" --with github.com/caddy-dns/cloudflare@latest
+
+FROM caddy:${CADDY_VERSION}
 
 LABEL maintainer="Sonic <sonic@djls.io>"
 LABEL org.opencontainers.image.description="Custom Caddy image with Cloudflare DNS support"
