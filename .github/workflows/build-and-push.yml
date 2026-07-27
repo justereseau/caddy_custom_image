@@ -5,7 +5,12 @@ env:
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
+    paths-ignore:
+      - "README.md"
+      - "LICENSE"
+      - ".github/**"
 
 jobs:
   push-store-image:
